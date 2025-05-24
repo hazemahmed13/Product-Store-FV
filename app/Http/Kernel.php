@@ -37,6 +37,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\AssignCustomerRole::class,
+            \App\Http\Middleware\HandleGuestRole::class,
         ],
 
         'api' => [
@@ -69,6 +70,7 @@ class Kernel extends HttpKernel
         'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         'not.driver' => \App\Http\Middleware\NotDriver::class,
+        'handle.guest' => \App\Http\Middleware\HandleGuestRole::class,
     ];
 
     /**
