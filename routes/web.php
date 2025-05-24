@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Web\ReportController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 
 Route::get('register', [UsersController::class, 'register'])->name('register');
 Route::post('register', [UsersController::class, 'doRegister'])->name('do_register');
@@ -60,23 +61,6 @@ Route::middleware(['web'])->group(function () {
     Route::post('/cart/update-qty/{product}', [\App\Http\Controllers\CartController::class, 'updateQty'])->name('cart.updateQty');
 });
 
-Route::get('/multable', function (Request $request) {
-    $j = $request->number??5;
-    $msg = $request->msg;
-    return view('multable', compact("j", "msg"));
-})->name('multiplication-table');
-
-Route::get('/even', function () {
-    return view('even');
-})->name('even-numbers');
-
-Route::get('/prime', function () {
-    return view('prime');
-})->name('prime-numbers');
-
-Route::get('/test', function () {
-    return view('test');
-});
 
 // Protected routes
 Route::middleware(['auth'])->group(function () {
@@ -244,3 +228,20 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::get('/reports/products', [ReportController::class, 'products'])->name('reports.products');
     Route::get('/reports/stock', [ReportController::class, 'stock'])->name('reports.stock');
 });
+
+// Password Reset Routes
+Route::get('forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])
+    ->name('password.request')
+    ->middleware('guest');
+
+Route::post('forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])
+    ->name('password.email')
+    ->middleware('guest');
+
+Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])
+    ->name('password.reset')
+    ->middleware('guest');
+
+Route::post('reset-password', [ForgotPasswordController::class, 'reset'])
+    ->name('password.update')
+    ->middleware('guest');
