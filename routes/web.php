@@ -52,15 +52,15 @@ Route::middleware(['web'])->group(function () {
     Route::post('/cart/update-qty/{product}', [\App\Http\Controllers\CartController::class, 'updateQty'])->name('cart.updateQty');
 });
 
-// ضع هذا قبل روت show
+// Place this before the show route
 Route::middleware(['auth', 'role:admin|manager'])->group(function () {
     Route::get('/clothes/create', [ProductController::class, 'create'])->name('products.create');
-    // باقي روتات الإدارة
+    // Other admin routes
 });
 
 // Protected routes
 Route::middleware(['auth'])->group(function () {
-    // Product routes - غيرناها لـ clothes
+    // Product routes - changed to clothes
     Route::get('/clothes/dashboard', [ProductController::class, 'index'])->middleware('auth')->name('products.dashboard');
 
     // Employee routes for product management
@@ -182,24 +182,23 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/orders/{order}/remove-driver', [App\Http\Controllers\Admin\OrderController::class, 'removeDriver'])->name('orders.remove-driver');
 });
 
-// أو يمكنك وضعها داخل group الـ admin مع باقي الروتس:
+// Or you can place it inside the admin group with other routes:
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/orders', [OrderController::class, 'index'])->name('admin.orders.index');
     Route::post('/orders/{order}/assign-driver', [OrderController::class, 'assignDriver'])->name('orders.assign-driver');
     Route::post('/orders/{order}/remove-driver', [OrderController::class, 'removeDriver'])->name('orders.remove-driver');
     
-    // إضافة سواق جديد
+    // Add new driver
     Route::get('/admin/drivers/create', [OrderController::class, 'createDriver'])->name('admin.drivers.create');
     Route::post('/admin/drivers', [OrderController::class, 'storeDriver'])->name('admin.drivers.store');
 });
 
-// في web.php ضيف الروت ده للاختبار:
-
+// Add this route for testing in web.php:
 Route::get('/test-images', function () {
-    // تحقق من الـ symbolic link
+    // Check the symbolic link
     $linkExists = is_link(public_path('storage'));
     
-    // اجلب كل الصور في المجلد
+    // Get all images in the directory
     $images = [];
     if (Storage::disk('public')->exists('images')) {
         $images = Storage::disk('public')->files('images');
