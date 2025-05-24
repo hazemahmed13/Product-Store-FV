@@ -13,9 +13,14 @@
         </thead>
         <tbody>
             @forelse($products as $product)
-                <tr>
+                <tr @if($product->stock_quantity <= 5) class="table-warning" @endif>
                     <td>{{ $product->name }}</td>
-                    <td>{{ $product->stock_quantity }}</td>
+                    <td>
+                        {{ $product->stock_quantity }}
+                        @if($product->stock_quantity <= 5)
+                            <span class="badge bg-warning text-dark ms-2">Low</span>
+                        @endif
+                    </td>
                 </tr>
             @empty
                 <tr>
@@ -25,4 +30,4 @@
         </tbody>
     </table>
 </div>
-@endsection 
+@endsection

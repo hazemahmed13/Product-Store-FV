@@ -46,6 +46,13 @@
                                    id="password_confirmation" name="password_confirmation" required>
                         </div>
 
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" value="" id="showPasswordToggle" onclick="togglePasswordVisibility()">
+                            <label class="form-check-label" for="showPasswordToggle">
+                                Show Passwords
+                            </label>
+                        </div>
+
                         <div class="d-flex justify-content-end gap-2">
                             <a href="{{ route('users.profile', $user->id) }}" class="btn btn-secondary">Cancel</a>
                             <button type="submit" class="btn btn-primary">Change Password</button>
@@ -56,6 +63,17 @@
         </div>
     </div>
 </div>
+<script>
+function togglePasswordVisibility() {
+    const pwFields = ['password', 'password_confirmation', 'old_password'];
+    pwFields.forEach(function(id) {
+        const field = document.getElementById(id);
+        if (field) {
+            field.type = field.type === 'password' ? 'text' : 'password';
+        }
+    });
+}
+</script>
 @endsection
 
 
