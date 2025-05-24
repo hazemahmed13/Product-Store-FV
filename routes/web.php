@@ -56,7 +56,18 @@ Route::middleware(['auth', 'role:admin|manager'])->group(function () {
     // باقي روتات الإدارة
 });
 
-<<<<<<< HEAD
+Route::get('/clothes/{product}', [ProductController::class, 'show'])->name('products.show');
+
+// Cart routes (public)
+Route::middleware(['web'])->group(function () {
+    Route::post('/cart/buy-now/{product}', [\App\Http\Controllers\CartController::class, 'buyNow'])->name('cart.buyNow');
+    Route::post('/cart/add/{product}', [\App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
+    Route::get('/cart', [\App\Http\Controllers\CartController::class, 'show'])->name('cart.show');
+    Route::post('/cart/remove/{product}', [\App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
+    Route::post('/cart/update-qty/{product}', [\App\Http\Controllers\CartController::class, 'updateQty'])->name('cart.updateQty');
+});
+
+// Test routes
 Route::get('/multable', function (Request $request) {
     $j = $request->number??5;
     $msg = $request->msg;
@@ -74,19 +85,6 @@ Route::get('/prime', function () {
 Route::get('/test', function () {
     return view('test');
 });
-=======
-Route::get('/clothes/{product}', [ProductController::class, 'show'])->name('products.show');
-
-// Cart routes (public)
-Route::middleware(['web'])->group(function () {
-    Route::post('/cart/buy-now/{product}', [\App\Http\Controllers\CartController::class, 'buyNow'])->name('cart.buyNow');
-    Route::post('/cart/add/{product}', [\App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
-    Route::get('/cart', [\App\Http\Controllers\CartController::class, 'show'])->name('cart.show');
-    Route::post('/cart/remove/{product}', [\App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
-    Route::post('/cart/update-qty/{product}', [\App\Http\Controllers\CartController::class, 'updateQty'])->name('cart.updateQty');
-});
-
->>>>>>> 579914d0f2801286ae46a5933072a40472752cab
 
 // Protected routes
 Route::middleware(['auth'])->group(function () {
@@ -119,11 +117,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/users/manage', [UsersController::class, 'manageUsers'])
         ->middleware(['role:manager'])
         ->name('users.manage');
-    
+
     Route::post('/users/{user}/manage-credit', [UserCreditController::class, 'manageCredit'])
         ->middleware(['role:manager'])
         ->name('users.manage-credit');
-    
+
     // User creation routes (manager only)
     Route::middleware(['role:manager'])->group(function () {
         Route::get('/users/create', [UsersController::class, 'create'])->name('users.create');
@@ -212,7 +210,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/orders', [OrderController::class, 'index'])->name('admin.orders.index');
     Route::post('/orders/{order}/assign-driver', [OrderController::class, 'assignDriver'])->name('orders.assign-driver');
     Route::post('/orders/{order}/remove-driver', [OrderController::class, 'removeDriver'])->name('orders.remove-driver');
-    
+
     // إضافة سواق جديد
     Route::get('/admin/drivers/create', [OrderController::class, 'createDriver'])->name('admin.drivers.create');
     Route::post('/admin/drivers', [OrderController::class, 'storeDriver'])->name('admin.drivers.store');
@@ -223,13 +221,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::get('/test-images', function () {
     // تحقق من الـ symbolic link
     $linkExists = is_link(public_path('storage'));
-    
+
     // اجلب كل الصور في المجلد
     $images = [];
     if (Storage::disk('public')->exists('images')) {
         $images = Storage::disk('public')->files('images');
     }
-    
+
     return [
         'storage_link_exists' => $linkExists,
         'storage_path' => storage_path('app/public'),
@@ -240,13 +238,7 @@ Route::get('/test-images', function () {
     ];
 });
 
-Role::firstOrCreate(['name' => 'driver']);
 
-$admin = App\Models\User::where('email', 'admin@admin.com')->first();
-$admin->givePermissionTo('manage-products');
-
-$user = App\Models\User::where('email', 'admin@admin.com')->first();
-$user->getRoleNames();
 
 // Report Routes (Manager only)
 Route::middleware(['auth', 'role:manager'])->group(function () {
