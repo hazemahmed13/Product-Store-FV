@@ -22,11 +22,15 @@
       </div>
       <div class="form-group mb-2">
         <label for="model" class="form-label">Password:</label>
-        <input type="password" class="form-control" placeholder="password" name="password" required>
+        <input type="password" class="form-control" placeholder="password" name="password" id="password" required>
       </div>
       <div class="form-group mb-2">
         <label for="model" class="form-label">Password Confirmation:</label>
-        <input type="password" class="form-control" placeholder="Confirmation" name="password_confirmation" required>
+        <input type="password" class="form-control" placeholder="Confirmation" name="password_confirmation" id="password_confirmation" required>
+      </div>
+      <div class="form-group mb-2">
+        <input type="checkbox" id="showPassword" onclick="togglePasswordVisibility()">
+        <label for="showPassword">Show Passwords</label>
       </div>
       <div class="form-group mb-2">
         <button type="submit" class="btn btn-primary">Register</button>
@@ -35,6 +39,17 @@
     </div>
   </div>
 </div>
+<script>
+function togglePasswordVisibility() {
+  const pwFields = ['password', 'password_confirmation'];
+  pwFields.forEach(function(id) {
+    const field = document.getElementById(id);
+    if (field) {
+      field.type = field.type === 'password' ? 'text' : 'password';
+    }
+  });
+}
+</script>
 @endsection
 
 
