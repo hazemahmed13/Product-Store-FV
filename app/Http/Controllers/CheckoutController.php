@@ -73,6 +73,9 @@ class CheckoutController extends Controller
 
             DB::commit();
             session()->forget('cart');
+
+            // Store last order ID in session
+            session(['last_order_id' => $purchase->id]);
             
             return redirect()->route('purchases.index')
                 ->with('success', 'Order placed successfully!');
@@ -83,7 +86,7 @@ class CheckoutController extends Controller
                 ->with('error', 'Error processing order: ' . $e->getMessage());
         }
     }
-} 
+}
 
 
 

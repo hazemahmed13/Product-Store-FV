@@ -44,6 +44,25 @@ class HeroSectionController extends Controller
 
         return redirect()->back()->with('success', 'Hero section updated successfully!');
     }
+
+    public function reset()
+    {
+        $hero = HeroSection::first();
+        if ($hero) {
+            $hero->heading = null;
+            $hero->subheading = null;
+            $hero->description = null;
+            $hero->button_text = null;
+            $hero->button_link = null;
+            $hero->overlay_opacity = null;
+            if ($hero->background_image && \Storage::disk('public')->exists($hero->background_image)) {
+                \Storage::disk('public')->delete($hero->background_image);
+            }
+            $hero->background_image = null;
+            $hero->save();
+        }
+        return redirect()->back()->with('success', 'Hero section reset to default!');
+    }
 }
 
 

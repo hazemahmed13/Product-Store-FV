@@ -145,6 +145,13 @@
                         </ul>
                     </li>
                 @endguest
+
+                <!-- Show current date -->
+                <li class="nav-item">
+                    <span class="nav-link text-muted">
+                        {{ \Carbon\Carbon::now()->format('l, F j, Y') }}
+                    </span>
+                </li>
             </ul>
         </div>
     </div>

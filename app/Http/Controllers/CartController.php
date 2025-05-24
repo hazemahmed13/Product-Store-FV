@@ -84,7 +84,13 @@ class CartController extends Controller
         session(['cart' => $cart]);
         return back()->with('success', 'Cart updated.');
     }
-} 
+
+    public function clear()
+    {
+        session()->forget('cart');
+        return back()->with('success', 'Cart cleared.');
+    }
+}
 
 
 
