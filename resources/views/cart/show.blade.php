@@ -6,6 +6,14 @@
     @if(count($cart) === 0)
         <div class="alert alert-info">Your cart is empty.</div>
     @else
+    <div class="mb-3">
+        <form action="{{ route('cart.clear') }}" method="POST" onsubmit="return confirm('Are you sure you want to clear your cart?');">
+            @csrf
+            <button type="submit" class="btn btn-danger btn-sm">
+                <i class="fas fa-trash-alt"></i> Clear Cart
+            </button>
+        </form>
+    </div>
     <div class="row">
         <div class="col-lg-8">
             <table class="table align-middle">
@@ -72,4 +80,4 @@
     </div>
     @endif
 </div>
-@endsection 
+@endsection
