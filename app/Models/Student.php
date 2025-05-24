@@ -12,14 +12,14 @@ class Student extends Model
     public function up()
 {
     Schema::table('students', function (Blueprint $table) {
-        $table->string('name');  // إضافة العمود name
+        $table->string('name'); 
     });
 }
 
 public function down()
 {
     Schema::table('students', function (Blueprint $table) {
-        $table->dropColumn('name');  // إزالة العمود name إذا تم التراجع
+        $table->dropColumn('name'); 
     });
 }
 public function user()
@@ -27,3 +27,43 @@ public function user()
     return $this->belongsTo(User::class);
 }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
