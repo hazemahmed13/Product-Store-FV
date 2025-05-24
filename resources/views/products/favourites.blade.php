@@ -14,6 +14,11 @@
                         <h5 class="card-title">{{ $product->name }}</h5>
                         <p class="card-text">{{ $product->description }}</p>
                         <a href="{{ route('products.show', $product) }}" class="btn btn-primary">View</a>
+                        <form action="{{ route('products.favourite', $product) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to remove this from your favourites?');">Remove from Favourite</button>
+                        </form>
                     </div>
                 </div>
             </div>

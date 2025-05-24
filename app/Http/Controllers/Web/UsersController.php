@@ -228,16 +228,11 @@ class UsersController extends Controller {
     }
 
     public function manageUsers(Request $request) {
-        if(!auth()->user()->hasAnyRole(['admin', 'manager'])) {
+        if(!auth()->user()->hasRole('manager')) {
             abort(403, 'Unauthorized action.');
         }
         
         $query = User::select('*');
-        
-        // If user is an employee, only show customers
-        if(auth()->user()->hasRole('employee')) {
-            $query->role('customer');
-        }
         
         if ($request->keywords) {
             $query->where("name", "like", "%$request->keywords%");

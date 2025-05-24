@@ -7,6 +7,7 @@ use App\Models\Purchase;
 use App\Models\Driver;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class OrderController extends Controller
 {
@@ -109,5 +110,25 @@ class OrderController extends Controller
         $order->save();
 
         return redirect()->back()->with('success', 'Driver assigned successfully!');
+    }
+
+    public function orderStatus()
+    {
+        $orders = Purchase::where('driver_id', auth()->id())
+            ->with(['customer', 'items'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('driver.orders.status', compact('orders'));
+    }
+
+    public function customerLocations()
+    {
+        $orders = Purchase::where('driver_id', auth()->id())
+            ->whereIn('order_status', ['Pending', 'On the way'])
+            ->with(['user', 'product'])
+            ->get();
+
+        return view('driver.locations', compact('orders'));
     }
 }

@@ -21,6 +21,7 @@ use App\Models\HeroSection;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Web\ReportController;
 
 Route::get('register', [UsersController::class, 'register'])->name('register');
 Route::post('register', [UsersController::class, 'doRegister'])->name('do_register');
@@ -38,7 +39,9 @@ Route::post('users/save_password/{user}', [UsersController::class, 'savePassword
 Route::get('/', [HomeController::class, 'home'])->name('home');
 
 // Public routes for products and cart
-Route::get('/clothes', [ProductController::class, 'index'])->name('products.index');
+Route::middleware(['web'])->group(function () {
+    Route::get('/clothes', [ProductController::class, 'index'])->name('products.index');
+});
 
 // ضع هذا قبل روت show
 Route::middleware(['auth', 'role:admin|manager'])->group(function () {
@@ -49,11 +52,13 @@ Route::middleware(['auth', 'role:admin|manager'])->group(function () {
 Route::get('/clothes/{product}', [ProductController::class, 'show'])->name('products.show');
 
 // Cart routes (public)
-Route::post('/cart/buy-now/{product}', [\App\Http\Controllers\CartController::class, 'buyNow'])->name('cart.buyNow');
-Route::post('/cart/add/{product}', [\App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
-Route::get('/cart', [\App\Http\Controllers\CartController::class, 'show'])->name('cart.show');
-Route::post('/cart/remove/{product}', [\App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
-Route::post('/cart/update-qty/{product}', [\App\Http\Controllers\CartController::class, 'updateQty'])->name('cart.updateQty');
+Route::middleware(['web'])->group(function () {
+    Route::post('/cart/buy-now/{product}', [\App\Http\Controllers\CartController::class, 'buyNow'])->name('cart.buyNow');
+    Route::post('/cart/add/{product}', [\App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
+    Route::get('/cart', [\App\Http\Controllers\CartController::class, 'show'])->name('cart.show');
+    Route::post('/cart/remove/{product}', [\App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
+    Route::post('/cart/update-qty/{product}', [\App\Http\Controllers\CartController::class, 'updateQty'])->name('cart.updateQty');
+});
 
 Route::get('/multable', function (Request $request) {
     $j = $request->number??5;
@@ -102,11 +107,11 @@ Route::middleware(['auth'])->group(function () {
 
     // User Management Routes
     Route::get('/users/manage', [UsersController::class, 'manageUsers'])
-        ->middleware(['role:admin|manager'])
+        ->middleware(['role:manager'])
         ->name('users.manage');
     
     Route::post('/users/{user}/manage-credit', [UserCreditController::class, 'manageCredit'])
-        ->middleware(['role:admin|manager'])
+        ->middleware(['role:manager'])
         ->name('users.manage-credit');
     
     // User creation routes (manager only)
@@ -177,11 +182,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/admin/hero-section', [HeroSectionController::class, 'update'])->name('admin.hero.update');
 });
 
-
+// Driver routes
 Route::middleware(['auth', 'role:driver'])->prefix('driver')->group(function () {
     Route::get('/orders', [OrderController::class, 'driverOrders'])->name('driver.orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'driverOrderShow'])->name('driver.orders.show');
     Route::post('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('driver.orders.updateStatus');
+    Route::get('/orders/status', [OrderController::class, 'orderStatus'])->name('driver.orders.status');
+    Route::get('/locations', [OrderController::class, 'customerLocations'])->name('driver.locations');
 });
 
 // Driver Management Routes
@@ -230,3 +237,10 @@ $admin->givePermissionTo('manage-products');
 
 $user = App\Models\User::where('email', 'admin@admin.com')->first();
 $user->getRoleNames();
+
+// Report Routes (Manager only)
+Route::middleware(['auth', 'role:manager'])->group(function () {
+    Route::get('/reports/sales', [ReportController::class, 'sales'])->name('reports.sales');
+    Route::get('/reports/products', [ReportController::class, 'products'])->name('reports.products');
+    Route::get('/reports/stock', [ReportController::class, 'stock'])->name('reports.stock');
+});
