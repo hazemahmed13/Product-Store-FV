@@ -88,11 +88,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/users/manage', [UsersController::class, 'manageUsers'])
         ->middleware(['role:manager'])
         ->name('users.manage');
-
+    
     Route::post('/users/{user}/manage-credit', [UserCreditController::class, 'manageCredit'])
         ->middleware(['role:manager'])
         ->name('users.manage-credit');
-
+    
     // User creation routes (manager only)
     Route::middleware(['role:manager'])->group(function () {
         Route::get('/users/create', [UsersController::class, 'create'])->name('users.create');
@@ -181,7 +181,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/orders', [OrderController::class, 'index'])->name('admin.orders.index');
     Route::post('/orders/{order}/assign-driver', [OrderController::class, 'assignDriver'])->name('orders.assign-driver');
     Route::post('/orders/{order}/remove-driver', [OrderController::class, 'removeDriver'])->name('orders.remove-driver');
-
+    
     // إضافة سواق جديد
     Route::get('/admin/drivers/create', [OrderController::class, 'createDriver'])->name('admin.drivers.create');
     Route::post('/admin/drivers', [OrderController::class, 'storeDriver'])->name('admin.drivers.store');
@@ -192,13 +192,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::get('/test-images', function () {
     // تحقق من الـ symbolic link
     $linkExists = is_link(public_path('storage'));
-
+    
     // اجلب كل الصور في المجلد
     $images = [];
     if (Storage::disk('public')->exists('images')) {
         $images = Storage::disk('public')->files('images');
     }
-
+    
     return [
         'storage_link_exists' => $linkExists,
         'storage_path' => storage_path('app/public'),

@@ -1,26 +1,22 @@
 <nav class="navbar navbar-expand-sm bg-white navbar-light mb-4">
     <div class="container">
-        <a class="navbar-brand" href="{{ url('/') }}">
-            <i class="fas fa-store me-2"></i>Product Store
-        </a>
-
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
-
+        
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}"
+                    <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" 
                        href="{{ url('/') }}">Home</a>
                 </li>
 
                 @unlessrole('driver')
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('products.*') ? 'active' : '' }}"
+                    <a class="nav-link {{ request()->routeIs('products.*') ? 'active' : '' }}" 
                        href="{{ route('products.index') }}">Products</a>
                 </li>
-
+                
                 @unlessrole('manager')
                 <li class="nav-item position-relative">
                     <a class="nav-link" href="{{ route('cart.show') }}">
@@ -38,7 +34,7 @@
                 @endunlessrole
 
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('products.favourites') ? 'active' : '' }}"
+                    <a class="nav-link {{ request()->routeIs('products.favourites') ? 'active' : '' }}" 
                        href="{{ route('products.favourites') }}">
                         <i class="fas fa-star"></i> Favourites
                     </a>
@@ -64,24 +60,24 @@
                     @endrole
                     @role('customer')
                     @endrole
-
-                    @can('manage-products')
+                    
+                    @hasanyrole('admin|employee')
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('products.create') ? 'active' : '' }}"
+                        <a class="nav-link {{ request()->routeIs('products.create') ? 'active' : '' }}" 
                            href="{{ route('products.create') }}">Add Product</a>
                     </li>
-                    @endcan
-
+                    @endhasanyrole
+                    
                     @role('admin')
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('admin.hero.edit') ? 'active' : '' }}"
+                        <a class="nav-link {{ request()->routeIs('admin.hero.edit') ? 'active' : '' }}" 
                            href="{{ route('admin.hero.edit') }}">
                             <i class="fas fa-image"></i> Manage Hero Section
                         </a>
                     </li>
-
+                    
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}"
+                        <a class="nav-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}" 
                            href="{{ route('admin.orders.index') }}">
                             <i class="fas fa-shopping-cart"></i> Orders
                         </a>
@@ -90,19 +86,19 @@
 
                     @role('driver')
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('driver.orders.index') ? 'active' : '' }}"
+                        <a class="nav-link {{ request()->routeIs('driver.orders.index') ? 'active' : '' }}" 
                            href="{{ route('driver.orders.index') }}">
                             <i class="fas fa-truck"></i> My Deliveries
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('driver.orders.status') ? 'active' : '' }}"
+                        <a class="nav-link {{ request()->routeIs('driver.orders.status') ? 'active' : '' }}" 
                            href="{{ route('driver.orders.status') }}">
                             <i class="fas fa-clipboard-list"></i> Order Status
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('driver.locations') ? 'active' : '' }}"
+                        <a class="nav-link {{ request()->routeIs('driver.locations') ? 'active' : '' }}" 
                            href="{{ route('driver.locations') }}">
                             <i class="fas fa-map-marker-alt"></i> Customer Locations
                         </a>
@@ -110,7 +106,7 @@
                     @endrole
                 @endauth
             </ul>
-
+            
             <ul class="navbar-nav">
                 @guest
                     <li class="nav-item">
@@ -128,7 +124,7 @@
                     </li>
                     @endrole
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" 
                            data-bs-toggle="dropdown" aria-expanded="false">
                             {{ Auth::user()->name }}
                         </a>
