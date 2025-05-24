@@ -23,6 +23,8 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Web\ReportController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\ProfileController;
 
 Route::get('register', [UsersController::class, 'register'])->name('register');
 Route::post('register', [UsersController::class, 'doRegister'])->name('do_register');
@@ -42,18 +44,7 @@ Route::get('/', [HomeController::class, 'home'])->name('home');
 // Public routes for products and cart
 Route::middleware(['web'])->group(function () {
     Route::get('/clothes', [ProductController::class, 'index'])->name('products.index');
-});
-
-// ضع هذا قبل روت show
-Route::middleware(['auth', 'role:admin|manager'])->group(function () {
-    Route::get('/clothes/create', [ProductController::class, 'create'])->name('products.create');
-    // باقي روتات الإدارة
-});
-
-Route::get('/clothes/{product}', [ProductController::class, 'show'])->name('products.show');
-
-// Cart routes (public)
-Route::middleware(['web'])->group(function () {
+    Route::get('/clothes/{product}', [ProductController::class, 'show'])->name('products.show');
     Route::post('/cart/buy-now/{product}', [\App\Http\Controllers\CartController::class, 'buyNow'])->name('cart.buyNow');
     Route::post('/cart/add/{product}', [\App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
     Route::get('/cart', [\App\Http\Controllers\CartController::class, 'show'])->name('cart.show');
@@ -61,6 +52,11 @@ Route::middleware(['web'])->group(function () {
     Route::post('/cart/update-qty/{product}', [\App\Http\Controllers\CartController::class, 'updateQty'])->name('cart.updateQty');
 });
 
+// ضع هذا قبل روت show
+Route::middleware(['auth', 'role:admin|manager'])->group(function () {
+    Route::get('/clothes/create', [ProductController::class, 'create'])->name('products.create');
+    // باقي روتات الإدارة
+});
 
 // Protected routes
 Route::middleware(['auth'])->group(function () {
@@ -120,6 +116,11 @@ Route::middleware(['auth'])->group(function () {
 
     // Product favourite routes
     Route::post('/clothes/{product}/favourite', [ProductController::class, 'favourite'])->name('products.favourite')->middleware('auth');
+
+    // Profile Management Routes
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile/link/{provider}', [ProfileController::class, 'linkSocialAccount'])->name('profile.link');
+    Route::delete('/profile/unlink/{provider}', [ProfileController::class, 'unlinkSocialAccount'])->name('profile.unlink');
 });
 
 // Google Authentication Routes
@@ -230,18 +231,22 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
 });
 
 // Password Reset Routes
-Route::get('forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])
+Route::get('password/reset', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showLinkRequestForm'])
     ->name('password.request')
     ->middleware('guest');
 
-Route::post('forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])
+Route::post('password/email', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])
     ->name('password.email')
     ->middleware('guest');
 
-Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])
+Route::get('password/reset/{token}', [App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])
     ->name('password.reset')
     ->middleware('guest');
 
-Route::post('reset-password', [ForgotPasswordController::class, 'reset'])
+Route::post('password/reset', [App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])
     ->name('password.update')
     ->middleware('guest');
+
+// 3. Add routes for social login
+Route::get('auth/{provider}', [App\Http\Controllers\Auth\SocialController::class, 'redirectToProvider'])->name('social.redirect');
+Route::get('auth/{provider}/callback', [App\Http\Controllers\Auth\SocialController::class, 'handleProviderCallback'])->name('social.callback');

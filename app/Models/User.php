@@ -26,6 +26,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'email_verified_at',
+        'avatar',
     ];
 
     /**
@@ -145,5 +146,20 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         // متاح لو معندوش أوردر غير مكتمل
         return !$this->currentOrder()->exists();
+    }
+
+    public function socialAccounts()
+    {
+        return $this->hasMany(SocialAccount::class);
+    }
+
+    public function hasSocialAccount($provider)
+    {
+        return $this->socialAccounts()->where('provider', $provider)->exists();
+    }
+
+    public function getSocialAccount($provider)
+    {
+        return $this->socialAccounts()->where('provider', $provider)->first();
     }
 }
