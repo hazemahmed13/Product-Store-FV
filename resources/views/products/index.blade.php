@@ -72,14 +72,12 @@
                                 @csrf
                                 <button type="submit" class="btn btn-primary">Add to Cart</button>
                             </form>
-                            @if(auth()->check() && auth()->user()->hasRole('customer'))
-                                <form action="{{ route('products.favourite', $product) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    <button type="submit" class="btn btn-warning">
-                                        {{ $product->favourite ? 'Remove from Favourite' : 'Add to Favourite' }}
-                                    </button>
-                                </form>
-                            @endif
+                            <form action="{{ route('products.favourite', $product) }}" method="POST" style="display:inline;">
+                                @csrf
+                                <button type="submit" class="btn btn-warning">
+                                    {{ $product->favourite ? 'Remove from Favourite' : 'Add to Favourite' }}
+                                </button>
+                            </form>
                             <form action="{{ route('cart.buyNow', $product) }}" method="POST" class="mt-2">
                                 @csrf
                                 <button type="submit" class="btn btn-primary w-100">Buy Now</button>
