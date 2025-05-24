@@ -22,12 +22,7 @@ class CartController extends Controller
         ];
         session(['cart' => $cart]);
         
-        // If user is not logged in, redirect to login
-        if (!Auth::check()) {
-            session(['url.intended' => route('checkout.show')]);
-            return redirect()->route('login');
-        }
-        
+        // Redirect to checkout
         return redirect()->route('checkout.show');
     }
 

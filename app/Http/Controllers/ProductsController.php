@@ -16,7 +16,7 @@ class ProductsController extends Controller {
 
 	public function __construct()
     {
-        $this->middleware('auth:web')->except('list');
+        // Remove auth middleware to allow public access
     }
 
 	public function list(Request $request) {
