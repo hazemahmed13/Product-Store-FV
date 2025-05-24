@@ -8,12 +8,19 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->id(); // ID تلقائي
-            $table->string('name'); // اسم المنتج
-            $table->text('description')->nullable(); // وصف المنتج (اختياري)
-            $table->decimal('price', 10, 2); // سعر المنتج
-            $table->integer('stock'); // الكمية المتاحة
-            $table->timestamps(); // created_at و updated_at
+            $table->id();
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->decimal('price', 10, 2);
+            $table->integer('stock_quantity');
+            $table->string('image')->nullable();
+            $table->string('code')->unique();
+            $table->string('model');
+            $table->boolean('hold')->default(false);
+            $table->boolean('favourite')->default(false);
+            $table->text('review')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 
